@@ -1,0 +1,11 @@
+{
+    "name": "scrapcovid",
+    "description": "Scrap article for khobar_covid_bot",
+    "repository": "https://github.com/me-abumuhammad/scrapcovid.git",
+    "success_url": "/",
+    "keywords": ["rust", "actix"],
+    "website": "https://github.com/me-abumuhammad/scrapcovid.git",
+    "env": {
+      "BUILDPACK_URL": "https://github.com/emk/heroku-buildpack-rust.git"
+    }
+  }

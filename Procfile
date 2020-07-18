@@ -1,1 +1,1 @@
-web: ./target/release/covid19
+web: ./target/release/scrapcovid

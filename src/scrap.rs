@@ -210,7 +210,7 @@ pub async fn get_data_covid_per_country(log: Logger) -> Result<Vec<CountryCovid>
                 //let neg = node.find(Attr("style", "color:#d6d6d6")).next().unwrap().text();
                 result.push(CountryCovid{
                     total: tot,
-                    name: ""
+                    name: "yey".to_string()
                 })
             }
 

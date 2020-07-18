@@ -62,3 +62,10 @@ pub async fn ciamis(state: web::Data<AppState>) -> Result<impl Responder, AppErr
     .map_err(log_error(sublog))
 }
 
+pub async fn country(state: web::Data<AppState>) -> Result<impl Responder, AppError> {
+    let sublog = state.log.new(o!("handler" => "country"));
+    let result = scrap::get_data_covid_per_country(sublog.clone()).await;
+    result
+    .map(|res| HttpResponse::Ok().json(res))
+    .map_err(log_error(sublog))
+}

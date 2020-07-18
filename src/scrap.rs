@@ -1,5 +1,5 @@
 use crate::errors::{AppErrorType::*, AppError};
-use crate::models::{Article, Rest, Ciamis};
+use crate::models::{Article, Rest, Ciamis, CountryCovid};
 
 use select::document::Document;
 use select::predicate::{Attr, Class, Name};
@@ -180,6 +180,41 @@ pub async fn get_data_ciamis(log: Logger) -> Result<Ciamis, AppError> {
                 status: "Ok".to_string(),
                 data: Some(spans)
             })
+        },
+        Err(e) => Err(AppError::from(e))
+    }
+}
+
+pub async fn get_data_covid_per_country(log: Logger) -> Result<Vec<CountryCovid>, AppError> {
+    let body = reqwest::get("https://coronavirus.jhu.edu/map.html")
+    .await?
+    .text()
+    .await
+    .map_err(|err| {
+        let sublog = log.new(o!("cause" => err.to_string()));
+        crit!(sublog, "Error request");
+        AppError::from(err)
+    });
+
+    match body {
+        Ok(str) => {
+            let document = Document::from(str.as_str());
+            let mut result = Vec::new();
+            for node in document.find(Class("feature-list"))
+            .next()
+            .unwrap()
+            .parent()
+            .unwrap()
+            .find(Class("external-html")) {
+                let tot = node.find(Name("strong")).next().unwrap().text();
+                let neg = node.find(Attr("style", "color:#d6d6d6")).next().unwrap().text();
+                result.push(CountryCovid{
+                    total: tot,
+                    name: neg
+                })
+            }
+
+            Ok(result)
         },
         Err(e) => Err(AppError::from(e))
     }

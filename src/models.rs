@@ -30,9 +30,3 @@ pub struct Ciamis {
     pub status: String,
     pub data: Option<Vec<String>>,
 }
-
-#[derive(Debug, Serialize)]
-pub struct CountryCovid {
-    pub name: String,
-    pub total: String,
-}

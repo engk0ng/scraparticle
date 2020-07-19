@@ -1,5 +1,5 @@
 use crate::errors::{AppErrorType::*, AppError};
-use crate::models::{Article, Rest, Ciamis, CountryCovid};
+use crate::models::{Article, Rest, Ciamis};
 
 use select::document::Document;
 use select::predicate::{Attr, Class, Name};

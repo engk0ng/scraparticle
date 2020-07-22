@@ -115,6 +115,41 @@ pub async fn get_article_akhbar(log: Logger) -> Result<Rest, AppError> {
     }
 }
 
+pub async fn get_news_covid_gov(log: Logger) -> Result<Rest, AppError> {
+    let body = reqwest::get("https://covid19.go.id/p/berita")
+    .await?
+    .text()
+    .await
+    .map_err(|err| {
+        let sublog = log.new(o!("cause" => err.to_string()));
+        crit!(sublog, "Error request");
+        AppError::from(err)
+    });
+
+    match body {
+        Ok(str) => {
+            let document = Document::from(str.as_str());
+            let mut res = Vec::new();
+            for node in document.find(Name("article")) {
+                let dc = node.find(Class("text-color-dark")).next().unwrap();
+                let href = dc.attr("href").unwrap();
+                let txt = dc.text();
+                res.push(Article{
+                    judul: txt,
+                    url: href.to_string()
+                })
+            }
+
+            Ok(Rest{
+                code: 200,
+                status: "Ok",
+                data: Some(res)
+            })
+        },
+        Err(err) => Err(AppError::from(err))
+    }
+}
+
 pub async fn get_article_bnpb(log: Logger) -> Result<Rest, AppError> {
     let body = reqwest::get("https://bnpb.go.id/cari?q=covid")
     .await?
@@ -184,3 +219,4 @@ pub async fn get_data_ciamis(log: Logger) -> Result<Ciamis, AppError> {
         Err(e) => Err(AppError::from(e))
     }
 }
+

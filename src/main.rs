@@ -31,6 +31,7 @@ async fn main() -> io::Result<()> {
         .route("/akhbar", web::get().to(akhbar))
         .route("/bnpb", web::get().to(bpnb))
         .route("/ciamis", web::get().to(ciamis))
+        .route("/coviggov", web::get().to(get_article_covig_gov))
     })
     .bind(format!("{}:{}", host, port))?
     .run()

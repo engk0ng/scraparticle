@@ -142,7 +142,7 @@ pub async fn get_news_covid_gov(log: Logger) -> Result<Rest, AppError> {
 
             Ok(Rest{
                 code: 200,
-                status: "Ok",
+                status: "Ok".to_string(),
                 data: Some(res)
             })
         },

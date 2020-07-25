@@ -16,8 +16,8 @@ use std::env;
 #[actix_rt::main]
 async fn main() -> io::Result<()> {
     dotenv().ok();
-    let host = env::var("HOST").expect("Host not set");
-    let port = env::var("PORT").expect("Port not set");
+    let host = "127.0.0.1";//env::var("HOST").expect("Host not set");
+    let port = 8989;//env::var("PORT").expect("Port not set");
     let log = Config::configure_log();
 
     HttpServer::new(move || {
@@ -32,6 +32,7 @@ async fn main() -> io::Result<()> {
         .route("/bnpb", web::get().to(bpnb))
         .route("/ciamis", web::get().to(ciamis))
         .route("/coviggov", web::get().to(get_article_covig_gov))
+        .route("/hoaxs", web::get().to(get_hoaxs))
     })
     .bind(format!("{}:{}", host, port))?
     .run()
